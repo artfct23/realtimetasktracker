@@ -1,0 +1,16 @@
+{
+  "token_hmac_secret_key": "secret_token_key_change_me",
+  "api_key": "api_key_change_me",
+  "admin_password": "admin_password",
+  "admin_secret": "admin_secret",
+  "namespaces": [
+    {
+      "name": "public",
+      "publish": true,
+      "subscribe_to_presence": true
+    }
+  ],
+  "allowed_origins": [
+    "*"
+  ]
+}
