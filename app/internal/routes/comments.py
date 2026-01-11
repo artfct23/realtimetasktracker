@@ -5,7 +5,7 @@ from sqlalchemy.orm import selectinload
 from uuid import UUID
 from typing import List
 
-from app.api.deps import get_db, get_current_user
+from app.core.deps import get_db, get_current_user
 from app.models.domain import Comment, Task, User
 from app.schemas.comment import CommentCreate, CommentResponse
 from app.services.realtime import broadcast_message

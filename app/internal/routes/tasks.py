@@ -1,8 +1,3 @@
-from fastapi import UploadFile, File
-from app.services.s3 import upload_file_to_s3
-from app.models.domain import Attachment
-from app.tasks.background import export_tasks_to_excel
-from app.tasks.background import notify_task_created
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -10,9 +5,9 @@ from sqlalchemy.orm import selectinload
 from typing import List
 from uuid import UUID
 
-from app.api.deps import get_db, get_current_user
+from app.core.deps import get_db, get_current_user
 from app.models.domain import Task, Project, User
-from app.schemas.task import TaskCreate, TaskResponse, TaskUpdate
+from app.schemas.task import TaskCreate, TaskResponse
 
 router = APIRouter()
 

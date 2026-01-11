@@ -1,10 +1,10 @@
 import uuid
-from fastapi import APIRouter, Depends, HTTPException, status, Response, Request
+from fastapi import APIRouter, Depends, HTTPException, Response, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from redis import asyncio as aioredis
 
-from app.api.deps import get_db, get_redis, get_current_user
+from app.core.deps import get_db, get_redis, get_current_user
 from app.models.domain import User
 from app.schemas.user import UserCreate, UserLogin, UserResponse
 from app.core.security import get_password_hash, verify_password

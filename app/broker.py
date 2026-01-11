@@ -12,4 +12,5 @@ broker_taskiq = AioPikaBroker(
     )
 )
 
-taskiq_fastapi.init(broker_taskiq, "app.main:app")
+taskiq_fastapi.init(broker_taskiq, "app.configuration.server:app")
+
