@@ -51,7 +51,7 @@ async def login(
         raise HTTPException(status_code=400, detail="Incorrect email or password")
 
     session_id = str(uuid.uuid4())
-    await redis.setex(f"session:{session_id}", 86400, str(user.id))  # 24 часа
+    await redis.setex(f"session:{session_id}", 86400, str(user.id))
 
     response.set_cookie(
         key="session_id",
