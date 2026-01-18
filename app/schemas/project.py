@@ -21,3 +21,7 @@ class ProjectResponse(ProjectBase):
     owner: Optional[UserResponse] = None
 
     model_config = ConfigDict(from_attributes=True)
+
+class ProjectUpdate(ProjectBase):
+    title: Optional[str] = None
+    description: Optional[str] = None

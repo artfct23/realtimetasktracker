@@ -1,7 +1,7 @@
 import pandas as pd
 from io import BytesIO
 from typing import List
-from app.models.domain import Task
+from app.models.task import Task
 
 
 def generate_tasks_excel(tasks: List[Task]) -> bytes:

@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from uuid import UUID
 
 from app.core.deps import get_db, get_current_user
-from app.models.domain import User
+from app.models.user import User
 from app.schemas.user import UserResponse
 from app.services.s3 import upload_file_to_s3
 from app.services.realtime import broadcast_message

@@ -1,0 +1,35 @@
+import uuid
+from datetime import datetime
+from typing import List, TYPE_CHECKING
+
+from sqlalchemy import Text, ForeignKey, DateTime, func
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from app.core.database import Base
+
+if TYPE_CHECKING:
+    from app.models.task import Task
+    from app.models.user import User
+    from app.models.attachment import Attachment
+
+
+class Comment(Base):
+    __tablename__ = "comments"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    text: Mapped[str] = mapped_column(Text)
+
+    task_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("tasks.id", ondelete="CASCADE"))
+    author_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"))
+
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    task: Mapped["Task"] = relationship("Task", back_populates="comments")
+    author: Mapped["User"] = relationship("User", back_populates="comments")
+
+    attachments: Mapped[List["Attachment"]] = relationship(
+        "Attachment",
+        back_populates="comment",
+        cascade="all, delete-orphan"
+    )

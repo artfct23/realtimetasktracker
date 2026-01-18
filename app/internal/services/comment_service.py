@@ -2,7 +2,7 @@ from uuid import UUID
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.internal.repository.base import BaseRepository
-from app.models.domain import Comment, Task
+from app.models.comment import Comment, Task
 from app.schemas.comment import CommentCreate
 from app.services.realtime import broadcast_message
 

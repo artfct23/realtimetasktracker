@@ -1,19 +1,19 @@
 import uuid
-from fastapi import APIRouter, Depends, HTTPException, Response, Request
+from fastapi import APIRouter, Depends, HTTPException, Response, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
+from sqlalchemy import select
 from redis import asyncio as aioredis
 
 from app.core.deps import get_db, get_redis, get_current_user
-from app.models.domain import User
+from app.core.config import settings
+from app.models.user import User
 from app.schemas.user import UserCreate, UserLogin, UserResponse
 from app.core.security import get_password_hash, verify_password
 from app.services.ses import send_email
 
 router = APIRouter()
 
-
-@router.post("/register", response_model=UserResponse)
+@router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def register(
         user_in: UserCreate,
         db: AsyncSession = Depends(get_db)
@@ -51,13 +51,14 @@ async def login(
         raise HTTPException(status_code=400, detail="Incorrect email or password")
 
     session_id = str(uuid.uuid4())
-    await redis.setex(f"session:{session_id}", 86400, str(user.id))
+    session_ttl = 86400
+    await redis.setex(f"session:{session_id}", session_ttl, str(user.id))
 
     response.set_cookie(
-        key="session_id",
+        key=settings.SESSION_COOKIE_KEY,
         value=session_id,
         httponly=True,
-        max_age=86400,
+        max_age=session_ttl,
         samesite="lax",
         secure=False
     )
@@ -71,14 +72,15 @@ async def logout(
         response: Response,
         redis: aioredis.Redis = Depends(get_redis)
 ):
-    session_id = request.cookies.get("session_id")
+    session_id = request.cookies.get(settings.SESSION_COOKIE_KEY)
     if session_id:
         await redis.delete(f"session:{session_id}")
 
-    response.delete_cookie("session_id")
+    response.delete_cookie(settings.SESSION_COOKIE_KEY)
     return {"message": "Logged out"}
 
 
 @router.get("/me", response_model=UserResponse)
 async def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
+

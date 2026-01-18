@@ -6,7 +6,9 @@ from uuid import UUID
 from typing import List
 
 from app.core.deps import get_db, get_current_user
-from app.models.domain import Comment, Task, User
+from app.models.comment import Comment
+from app.models.task import Task
+from app.models.user import User
 from app.schemas.comment import CommentCreate, CommentResponse
 from app.services.realtime import broadcast_message
 

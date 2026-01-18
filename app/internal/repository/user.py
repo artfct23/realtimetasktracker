@@ -1,8 +1,9 @@
 from sqlalchemy import select
 from app.internal.repository.base import BaseRepository
-from app.models.domain import User
+from app.models.user import User
+from app.schemas.user import UserCreate, UserLogin
 
-class UserRepository(BaseRepository[User]):
+class UserRepository(BaseRepository[User, UserCreate, UserCreate]):
     def __init__(self, db):
         super().__init__(User, db)
 
