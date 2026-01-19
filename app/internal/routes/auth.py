@@ -1,58 +1,35 @@
-import uuid
-from fastapi import APIRouter, Depends, HTTPException, Response, Request, status
+from fastapi import APIRouter, Depends, Response, Request, status, Cookie
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
 from redis import asyncio as aioredis
-
+from typing import Optional
 from app.core.deps import get_db, get_redis, get_current_user
 from app.core.config import settings
 from app.models.user import User
 from app.schemas.user import UserCreate, UserLogin, UserResponse
-from app.core.security import get_password_hash, verify_password
-from app.services.ses import send_email
+from app.internal.services.auth_service import AuthService
 
 router = APIRouter()
 
+def get_auth_service(
+    db: AsyncSession = Depends(get_db),
+    redis: aioredis.Redis = Depends(get_redis)
+) -> AuthService:
+    return AuthService(db, redis)
+
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def register(
-        user_in: UserCreate,
-        db: AsyncSession = Depends(get_db)
+    user_in: UserCreate,
+    service: AuthService = Depends(get_auth_service)
 ):
-    result = await db.execute(select(User).where(User.email == user_in.email))
-    if result.scalar_one_or_none():
-        raise HTTPException(status_code=400, detail="Email already registered")
-
-    new_user = User(
-        email=user_in.email,
-        hashed_password=get_password_hash(user_in.password),
-        full_name=user_in.full_name,
-        is_active=True
-    )
-    db.add(new_user)
-    await db.commit()
-    await db.refresh(new_user)
-
-    await send_email(new_user.email, "Welcome", "Welcome to Task Tracker!")
-
-    return new_user
-
+    return await service.register_user(user_in)
 
 @router.post("/login")
 async def login(
-        response: Response,
-        user_in: UserLogin,
-        db: AsyncSession = Depends(get_db),
-        redis: aioredis.Redis = Depends(get_redis)
+    response: Response,
+    user_in: UserLogin,
+    service: AuthService = Depends(get_auth_service)
 ):
-    result = await db.execute(select(User).where(User.email == user_in.email))
-    user = result.scalar_one_or_none()
-
-    if not user or not verify_password(user_in.password, user.hashed_password):
-        raise HTTPException(status_code=400, detail="Incorrect email or password")
-
-    session_id = str(uuid.uuid4())
-    session_ttl = 86400
-    await redis.setex(f"session:{session_id}", session_ttl, str(user.id))
+    session_id, session_ttl = await service.login_user(user_in)
 
     response.set_cookie(
         key=settings.SESSION_COOKIE_KEY,
@@ -62,25 +39,20 @@ async def login(
         samesite="lax",
         secure=False
     )
-
     return {"message": "Logged in successfully"}
-
 
 @router.post("/logout")
 async def logout(
-        request: Request,
-        response: Response,
-        redis: aioredis.Redis = Depends(get_redis)
+    response: Response,
+    session_id: Optional[str] = Cookie(alias=settings.SESSION_COOKIE_KEY, default=None),
+    service: AuthService = Depends(get_auth_service)
 ):
-    session_id = request.cookies.get(settings.SESSION_COOKIE_KEY)
-    if session_id:
-        await redis.delete(f"session:{session_id}")
-
+    await service.logout_user(session_id)
     response.delete_cookie(settings.SESSION_COOKIE_KEY)
     return {"message": "Logged out"}
-
 
 @router.get("/me", response_model=UserResponse)
 async def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
+
 

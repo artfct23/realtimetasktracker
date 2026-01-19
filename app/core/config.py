@@ -4,7 +4,7 @@ from typing import Optional
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "Task Tracker"
-
+    SESSION_COOKIE_KEY: str = "session_id"
     POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str = "postgres_password"
     POSTGRES_SERVER: str = "db"
