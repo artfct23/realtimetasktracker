@@ -2,7 +2,6 @@ from uuid import UUID
 from typing import List
 from fastapi import UploadFile, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-
 from app.internal.repository.task import TaskRepository
 from app.internal.repository.project import ProjectRepository
 from app.schemas.task import TaskCreate, TaskResponse
@@ -12,7 +11,6 @@ from app.tasks.background import notify_task_created
 
 class TaskService:
     def __init__(self, db: AsyncSession):
-        self.db = db
         self.repo = TaskRepository(db)
         self.project_repo = ProjectRepository(db)
 

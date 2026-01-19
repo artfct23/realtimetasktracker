@@ -5,18 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="910bcd54-8bb2-4c30-97c0-b453f653b27c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/internal/services/user_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/internal/repository/comment.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/core/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/core/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/core/database.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/internal/routes/auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/internal/routes/auth.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/internal/routes/comments.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/internal/routes/comments.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/internal/routes/users.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/internal/routes/users.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/internal/services/auth_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/internal/services/auth_service.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/internal/services/comment_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/internal/services/comment_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/s3.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/s3.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/internal/services/task_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/internal/services/task_service.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
